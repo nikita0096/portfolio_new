@@ -1,0 +1,131 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Mykyta Zubov — Front-End Engineer',
+	description = 'Frontend engineer building web applications with React, Next.js and TypeScript. From real-time messaging to AI-powered CRM tools — complex workflows made simple, fast and reliable.',
+} = Astro.props;
+
+const siteUrl = Astro.site?.href ?? 'https://mzubov.dev/';
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+
+		<!-- Open Graph / social -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+
+		<!-- Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Archivo+Narrow:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+
+		<!-- Structured data for SEO -->
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'Person',
+				name: 'Mykyta Zubov',
+				jobTitle: 'Front-End Engineer',
+				email: 'mailto:mykyta.zubov.dev@gmail.com',
+				address: { '@type': 'PostalAddress', addressLocality: 'Seattle', addressRegion: 'WA' },
+				url: siteUrl,
+				sameAs: [
+					'https://github.com/nikita0096',
+					'https://www.linkedin.com/in/mykyta-zubov-a27552393/',
+				],
+				knowsAbout: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'Web Performance'],
+			})}
+		/>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--bg: #f3efe7;
+		--ink: #1a1918;
+		--panel: #e9e3d8;
+		--card: #fbf9f4;
+		--muted: #6b665e;
+		--muted-2: #4a4640;
+		--line: rgba(26, 25, 24, 0.28);
+		--line-soft: rgba(26, 25, 24, 0.18);
+		--mono: 'Magda Clean Mono', 'IBM Plex Mono', monospace;
+		--display: 'Archivo Narrow', sans-serif;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html,
+	body {
+		margin: 0;
+	}
+
+	body {
+		background: var(--bg);
+		color: var(--ink);
+		font-family: var(--mono);
+		font-size: 14px;
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+
+	a {
+		color: var(--ink);
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: var(--muted);
+	}
+
+	@keyframes pulseDot {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.2;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.001ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.001ms !important;
+		}
+	}
+</style>
