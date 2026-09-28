@@ -195,8 +195,8 @@ const social = [
 									<div class="slide__stack">
 										<span class="eyebrow eyebrow--muted">stack used</span>
 										<div class="chips">
-											{j.stack.map((c) => (
-												<span class="chip">{c}</span>
+											{j.stack.map((c, ci) => (
+												<span class="chip" style={`--ci:${ci}`}>{c}</span>
 											))}
 										</div>
 									</div>
@@ -831,6 +831,24 @@ const social = [
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
 		white-space: nowrap;
+		/* Resting state hidden; chips reveal only once their slide is active. */
+		opacity: 0;
+		transform: translate(22px, 16px);
+	}
+	/* Chips fly in from the bottom-right corner toward the left, one after another. */
+	.slide.is-active .chip {
+		animation: chipIn 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+		animation-delay: calc(var(--ci) * 0.07s);
+	}
+	@keyframes chipIn {
+		from {
+			opacity: 0;
+			transform: translate(22px, 16px);
+		}
+		to {
+			opacity: 1;
+			transform: translate(0, 0);
+		}
 	}
 	.batches__tabs {
 		display: grid;
@@ -1175,6 +1193,7 @@ const social = [
 	if (batches) {
 		const track = document.getElementById('batchTrack')!;
 		const counter = document.getElementById('batchCounter')!;
+		const slides = Array.from(track.querySelectorAll<HTMLElement>('.slide'));
 		const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.tab'));
 		const total = Number(batches.dataset.count) || tabs.length;
 		const DURATION = 6000;
@@ -1182,6 +1201,8 @@ const social = [
 		let paused = false;
 		let progress = 0; // 0..1 elapsed within the current slide
 		let last = performance.now();
+		let chipTimer = 0; // holds the pending is-active timeout so we can cancel it
+		const SLIDE_MS = 500; // matches the .batches__track transform transition
 
 		// Set every tab's bar explicitly: past = full, future = empty (pale), active = progress.
 		const setFills = () => {
@@ -1197,6 +1218,13 @@ const social = [
 		const renderSlide = () => {
 			track.style.transform = `translate3d(-${i * 100}%,0,0)`;
 			counter.textContent = `${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+			// Re-trigger the chip fly-in, but only after the slide has finished sliding in —
+			// otherwise the chips animate while the slide is still travelling and it's over
+			// before the user sees it. Strip is-active immediately, then re-add once the
+			// track transition settles so the CSS animation restarts every visit.
+			slides.forEach((s) => s.classList.remove('is-active'));
+			clearTimeout(chipTimer);
+			chipTimer = window.setTimeout(() => slides[i]?.classList.add('is-active'), SLIDE_MS);
 			setFills();
 		};
 
