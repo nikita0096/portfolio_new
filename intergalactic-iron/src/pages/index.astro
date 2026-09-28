@@ -179,6 +179,10 @@ const social = [
 				</div>
 			</div>
 			<div class="batches__view">
+				<span class="batches__hint" aria-hidden="true">
+					<span class="batches__hint-play">tap to pause</span>
+					<span class="batches__hint-paused">paused — tap to resume</span>
+				</span>
 				<div class="batches__track" id="batchTrack">
 					{
 						jobs.map((j, k) => (
@@ -771,9 +775,42 @@ const social = [
 		color: var(--bg);
 	}
 	.batches__view {
+		position: relative;
 		overflow: hidden;
 		border-top: 0.5px solid var(--line);
 		border-bottom: 0.5px solid var(--line);
+	}
+	/* Tap-to-pause hint: only meaningful on touch (no hover), hidden elsewhere. */
+	.batches__hint {
+		display: none;
+	}
+	.batches__hint-paused {
+		display: none;
+	}
+	.batches.is-paused .batches__hint-play {
+		display: none;
+	}
+	.batches.is-paused .batches__hint-paused {
+		display: inline;
+	}
+	@media (hover: none) {
+		.batches__hint {
+			position: absolute;
+			top: 10px;
+			right: 12px;
+			z-index: 2;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 9px;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			color: var(--muted);
+			pointer-events: none;
+		}
+		.batches.is-paused .batches__hint {
+			color: var(--ink);
+		}
 	}
 	.batches__track {
 		display: flex;
@@ -1254,12 +1291,27 @@ const social = [
 		batches.querySelector('.js-prev')?.addEventListener('click', () => go(i - 1));
 		batches.querySelector('.js-next')?.addEventListener('click', () => go(i + 1));
 		tabs.forEach((tab, k) => tab.addEventListener('click', () => go(k)));
-		batches.addEventListener('mouseenter', () => {
-			paused = true;
-		});
-		batches.addEventListener('mouseleave', () => {
-			paused = false;
-		});
+
+		// Hover-to-pause only for real pointers. On touch, a tap fires an emulated
+		// mouseenter (pausing) with no matching mouseleave, which would freeze the
+		// carousel and stall auto-advance.
+		if (window.matchMedia('(hover: hover)').matches) {
+			batches.addEventListener('mouseenter', () => {
+				paused = true;
+			});
+			batches.addEventListener('mouseleave', () => {
+				paused = false;
+			});
+		} else {
+			// Touch has no hover, so give readers explicit control: tapping the slide
+			// area toggles pause (auto-advance stops so there's time to read the text).
+			// Arrows/tabs sit outside .batches__view, so they keep navigating as before.
+			const view = batches.querySelector<HTMLElement>('.batches__view');
+			view?.addEventListener('click', () => {
+				paused = !paused;
+				batches.classList.toggle('is-paused', paused);
+			});
+		}
 
 		renderSlide();
 		requestAnimationFrame(tickFrame);
