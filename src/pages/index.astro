@@ -629,11 +629,14 @@ const social = [
 		display: grid;
 		gap: 6px;
 		font-size: 11px;
-		min-height: 92px;
 	}
 	.pipe__log #pipeLog {
 		display: grid;
 		gap: 6px;
+		/* Reserve space for the full 3 lines so the log never resizes as messages
+		   accumulate; bottom-anchor them so new lines fill upward, not push down. */
+		align-content: end;
+		min-height: calc(3 * 1.6em + 2 * 6px);
 	}
 	.log-line {
 		display: flex;
