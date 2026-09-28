@@ -1,15 +1,27 @@
-/tmp
-/out-tsc
+# build output
+dist/
 
-/node_modules
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/.pnp
-.pnp.js
+pnpm-debug.log*
 
-.vscode/*
+# environment variables
+.env
+.env.production
 
-# OS / IDE
+# macOS-specific files
 .DS_Store
+
+# jetbrains setting folder
 .idea/
+
+# local agent instructions (symlink to AGENTS.md)
+CLAUDE.md
