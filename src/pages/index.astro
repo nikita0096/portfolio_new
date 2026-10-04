@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 const jobs = [
 	{
 		years: 'jan 2025 — now',
-		co: 'c10r.io',
+		co: 'kompot.ai',
 		role: 'Frontend Engineer · Sunnyvale, CA · remote',
 		note: 'End-to-end features for a Business Management SaaS Platform, from API integration to responsive UI. Cut load times 40% by batching requests and removing redundant calls; built real-time sync over SocketIO and webhooks; integrated third-party services.',
 		stack: ['TypeScript', 'Next.js', 'Socket.IO', 'REST APIs', 'MongoDB', 'AI integrations'],
@@ -41,10 +41,10 @@ const stackData = [
 	{ name: 'JavaScript', cat: 'languages' }, { name: 'TypeScript', cat: 'languages' }, { name: 'SQL', cat: 'languages' },
 	{ name: 'React', cat: 'frontend' }, { name: 'Next.js', cat: 'frontend' }, { name: 'HTML', cat: 'frontend' }, { name: 'CSS', cat: 'frontend' }, { name: 'Tailwind CSS', cat: 'frontend' },{ name: 'Astro', cat: 'frontend' },
 	{ name: 'REST APIs', cat: 'apis & realtime' }, { name: 'Socket.IO', cat: 'apis & realtime' }, { name: 'WebSockets', cat: 'apis & realtime' },
-	{ name: 'Redux Toolkit', cat: 'state & data' }, { name: 'Zustand', cat: 'state & data' }, { name: 'TanStack Query', cat: 'state & data' }, { name: 'PostgreSQL', cat: 'state & data' }, { name: 'MongoDB', cat: 'state & data' },
+	{ name: 'Redux Toolkit', cat: 'state & data' }, { name: 'Zustand', cat: 'state & data' }, { name: 'React Context', cat: 'state & data' }, { name: 'TanStack Query', cat: 'state & data' }, { name: 'PostgreSQL', cat: 'state & data' }, { name: 'MongoDB', cat: 'state & data' },
 	{ name: 'Git', cat: 'tools' }, { name: 'Cloudflare', cat: 'tools' }, { name: 'Vercel', cat: 'tools' }, { name: 'Webpack', cat: 'tools' }, { name: 'Vite', cat: 'tools' }, { name: 'CI/CD', cat: 'tools' },
 	{ name: 'Jest', cat: 'testing' }, { name: 'React Testing Library', cat: 'testing' }, { name: 'Playwright', cat: 'testing' },
-	{ name: 'Core Web Vitals', cat: 'performance' }, { name: 'Lighthouse', cat: 'performance' }, { name: 'React DevTools Profiler,', cat: 'performance' }
+	{ name: 'Core Web Vitals', cat: 'performance' }, { name: 'React DevTools Profiler,', cat: 'performance' }
 ];
 
 const categories = [...new Set(stackData.map((x) => x.cat))].map((cat, k) => ({
@@ -57,6 +57,7 @@ const cookbookStack = ['Next.js', 'OAuth', 'PostgreSQL', 'Cloudflare Stream', 'C
 
 const email = 'mykyta.zubov.dev@gmail.com';
 const social = [
+	{ label: 'email', href: `mailto:${email}` },
 	{ label: 'github', href: 'https://github.com/nikita0096' },
 	{ label: 'linkedin', href: 'https://www.linkedin.com/in/mykyta-zubov-a27552393/' },
 ];
@@ -276,8 +277,7 @@ const social = [
 
 		<!-- Contact -->
 		<section id="contact" class="contact">
-			<div class="eyebrow">Get in touch</div>
-			<a href={`mailto:${email}`} class="contact__email">{email}</a>
+			<h4 class="eyebrow">Get in touch</h4>
 			<div class="contact__social">
 				{social.map((s) => (
 					<a href={s.href} target="_blank" rel="noopener">
@@ -322,6 +322,9 @@ const social = [
 	}
 	.eyebrow--xs {
 		font-size: 9px;
+	}
+	h4.eyebrow{
+		font-size: 17px;
 	}
 
 	/* Header */
