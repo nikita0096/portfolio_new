@@ -28,13 +28,13 @@ const jobs = [
 ];
 
 const stages = [
-	{ name: 'intake', desc: 'ticket: users report a slow page', live: 'received', msg: 'pm → dev: users say the page loads slowly' },
-	{ name: 'sync', desc: 'team meeting: priority, scope, owner', live: 'meeting', msg: 'meeting: priority high · frontend owns the fix' },
-	{ name: 'audit', desc: 'profile requests and render path', live: 'profiling', msg: 'dev: duplicate requests + oversized payloads found' },
-	{ name: 'plan', desc: 'solution agreed with backend & pm', live: 'aligning', msg: 'dev → backend: agreed on data contract' },
-	{ name: 'build', desc: 'fetch once, pass data down, trim queries', live: 'coding', msg: 'dev: one fetch at page level · lighter queries' },
-	{ name: 'measure', desc: 'benchmark load time across user scenarios', live: 'benchmarking', msg: 'bench: load time measured across user scenarios' },
-	{ name: 'ship', desc: 'result: page loads 40% faster', live: 'live', msg: 'dev → team: shipped · 40% faster · requests 3 → 1' },
+	{ name: 'intake', desc: 'ticket: users report a slow page', live: 'received', msg: 'pm → dev: users say the page loads slowly', time: '09:01AM' },
+	{ name: 'sync', desc: 'team meeting: priority, scope, owner', live: 'meeting', msg: 'meeting: priority high · frontend owns the fix', time: '11:15AM' },
+	{ name: 'audit', desc: 'profile requests and render path', live: 'profiling', msg: 'dev: duplicate requests + oversized payloads found', time: '12:03PM' },
+	{ name: 'plan', desc: 'solution agreed with backend & pm', live: 'aligning', msg: 'dev → backend: agreed on data contract', time: '01:58PM' },
+	{ name: 'build', desc: 'fetch once, pass data down, trim queries', live: 'coding', msg: 'dev: one fetch at page level · lighter queries', time: '03:23PM' },
+	{ name: 'measure', desc: 'benchmark load time across user scenarios', live: 'benchmarking', msg: 'bench: load time measured across user scenarios', time: '04:28PM' },
+	{ name: 'ship', desc: 'result: page loads 40% faster', live: 'live', msg: 'dev → team: shipped · 40% faster · requests 3 → 1', time: '05:01PM' },
 ];
 
 const stackData = [
@@ -117,7 +117,7 @@ const social = [
 					<div class="pipe__packet" id="pipePacket"></div>
 					{
 						stages.map((st, k) => (
-							<div class="stage" data-stage={k} data-live={st.live} data-msg={st.msg}>
+							<div class="stage" data-stage={k} data-live={st.live} data-msg={st.msg} data-time={st.time}>
 								<span class="stage__dot" />
 								<span class="stage__no">{String(k + 1).padStart(2, '0')}</span>
 								<span class="stage__body">
@@ -631,7 +631,9 @@ const social = [
 		padding: 14px 16px;
 		display: grid;
 		gap: 6px;
-		font-size: 11px;
+		font-size: 0.7em;
+		text-overflow: fade;
+
 	}
 	.pipe__log #pipeLog {
 		display: grid;
@@ -641,18 +643,20 @@ const social = [
 		align-content: end;
 		min-height: calc(3 * 1.6em + 2 * 6px);
 	}
+
 	.log-line {
 		display: flex;
 		gap: 10px;
+		flex-direction: row;
 		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
+		text-overflow: fade;
 		opacity: 0.5;
 	}
 	.log-line:last-child {
 		opacity: 1;
 	}
-	.log-line time {
+	.log-line span {
 		color: var(--muted);
 	}
 
@@ -1360,24 +1364,18 @@ const social = [
 			fill.style.height = `calc(100% * ${step / n})`;
 			packet.style.top = `calc(100% * ${(step + 0.5) / n})`;
 
-			const d = new Date();
-			const t = d.toLocaleTimeString('en-US', {
-				hour: '2-digit',
-				minute: '2-digit',
-				hour12: true,
-			});
-			log.push({ t, msg: stageEls[step].dataset.msg || '' });
+			log.push({ t: stageEls[step].dataset.time || '', msg: stageEls[step].dataset.msg || '' });
 			while (log.length > 3) log.shift();
 			logEl.innerHTML = log
 				.map(
 					(l) =>
-						`<div class="log-line"><time>${l.t}</time><span>${l.msg}</span></div>`,
+						`<div class="log-line"><span>${l.t}</span><span style="margin-left: 5px;">${l.msg}</span></div>`,
 				)
 				.join('');
 		};
 
 		tick();
-		setInterval(tick, 1800);
+		setInterval(tick, 2000);
 	}
 
 	// ---- "Next batch" blink ----
